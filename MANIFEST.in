@@ -4,15 +4,15 @@ include *.json
 include *.md
 include *.py
 include *.txt
-recursive-include swiss_accounting_integration *.css
-recursive-include swiss_accounting_integration *.csv
-recursive-include swiss_accounting_integration *.html
-recursive-include swiss_accounting_integration *.ico
-recursive-include swiss_accounting_integration *.js
-recursive-include swiss_accounting_integration *.json
-recursive-include swiss_accounting_integration *.md
-recursive-include swiss_accounting_integration *.png
-recursive-include swiss_accounting_integration *.py
-recursive-include swiss_accounting_integration *.svg
-recursive-include swiss_accounting_integration *.txt
-recursive-exclude swiss_accounting_integration *.pyc
+recursive-include swiss_accounting_software *.css
+recursive-include swiss_accounting_software *.csv
+recursive-include swiss_accounting_software *.html
+recursive-include swiss_accounting_software *.ico
+recursive-include swiss_accounting_software *.js
+recursive-include swiss_accounting_software *.json
+recursive-include swiss_accounting_software *.md
+recursive-include swiss_accounting_software *.png
+recursive-include swiss_accounting_software *.py
+recursive-include swiss_accounting_software *.svg
+recursive-include swiss_accounting_software *.txt
+recursive-exclude swiss_accounting_software *.pyc
