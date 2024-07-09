@@ -1,7 +1,6 @@
 ## Swiss Accounting Software
 
-ERPNext Functionality with Swiss QR Integration 
-and Abacus Export
+ERPNexts functionality with Swiss QR Integration and payment automation
 
 
 ### Structure

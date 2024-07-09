@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from . import __version__ as app_version
 
 app_name = "swiss_accounting_software"
-app_title = "Swiss Accounting Integration"
+app_title = "Swiss Accounting Software"
 app_publisher = "ONFUSE AG"
 app_description = "ERPNexts functionality with Swiss QR Integration and payment automation"
 app_icon = "octicon octicon-file-directory"

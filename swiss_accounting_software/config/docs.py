@@ -2,8 +2,8 @@
 Configuration for docs
 """
 
-# source_link = "https://github.com/[org_name]/swiss_accounting_integration"
-# docs_base_url = "https://[org_name].github.io/swiss_accounting_integration"
+# source_link = "https://github.com/[org_name]/swiss_accounting_software"
+# docs_base_url = "https://[org_name].github.io/swiss_accounting_software"
 # headline = "App that does everything"
 # sub_heading = "Yes, you got that right the first time, everything"
 
