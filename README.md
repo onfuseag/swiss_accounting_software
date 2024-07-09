@@ -1,4 +1,4 @@
-## Swiss Accounting Integration
+## Swiss Accounting Software
 
 ERPNext Functionality with Swiss QR Integration 
 and Abacus Export
