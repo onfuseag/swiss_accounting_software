@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "autoname": "field:company",
+ "creation": "2021-07-29 04:35:41.660087",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "qr_code_type",
+  "bank_account",
+  "assign_unreconciled_transactions_to"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "qr_code_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QR Code Type",
+   "options": "Type 1",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bank Account",
+   "options": "Bank Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assign_unreconciled_transactions_to",
+   "fieldtype": "Link",
+   "label": "Assign unreconciled transactions to",
+   "options": "User"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-08 15:01:54.500338",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss QR Bill Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <CreDtTm>2024-06-28T02:00:00+02:00</CreDtTm>
+            <NbOfTxs>{{ payments | len }}</NbOfTxs> <!-- Max size 5000 entries -->
+            <CtrlSum>120.00</CtrlSum>
+            <InitgPty><Nm>{{ bank_account.company }}</Nm><CtctDtls><Nm>ONFUSE AG</Nm><Othr>2024.07</Othr></CtctDtls></InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>{{ doc.name }}</PmtInfId>
+            <PmtMtd>TRF</PmtMtd> <!-- TRF = Credit transfer -->
+            <BtchBookg>true</BtchBookg>
+            <NbOfTxs>{{ doc.references | len }}</NbOfTxs> <!-- Transaction length -->
+            <PmtTpInf><CtgyPurp><Cd>SALA</Cd></CtgyPurp></PmtTpInf>
+            <ReqdExctnDt>{{ doc.posting_date }}</ReqdExctnDt>
+            <Dbtr><Nm>{{ bank_account.company }}</Nm></Dbtr>
+            <DbtrAcct><Id><IBAN>{{ bank_account.iban | replace(" ", "") }}</IBAN></Id><Tp><Prtry>CND</Prtry></Tp></DbtrAcct><DbtrAgt><FinInstnId><BIC>RAIFCH22XXX</BIC></FinInstnId></DbtrAgt>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>0d926f3014b5470f8d056e476bce03c4</InstrId>
+                    <EndToEndId>ee98e1c422514dcf990f0f47b10a0f32</EndToEndId>
+                </PmtId>
+                <Amt><InstdAmt Ccy="CHF">140.00</InstdAmt></Amt>
+                <ChrgBr>SHAR</ChrgBr>
+                <CdtrAgt><FinInstnId><BIC>KBSZCH22XXX</BIC></FinInstnId></CdtrAgt>
+                <Cdtr><Nm>Beneficiary name</Nm><PstlAdr><StrtNm>Glärnischstrasse</StrtNm><BldgNb>9</BldgNb><PstCd>8853</PstCd><TwnNm>Lachen</TwnNm><Ctry>CH</Ctry></PstlAdr></Cdtr>
+                <CdtrAcct>
+                    <Id><IBAN>CH000000000000000</IBAN></Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Salärzahlung</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

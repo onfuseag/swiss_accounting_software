@@ -1,0 +1,10 @@
+.DS_Store
+.vscode
+.parcel-cache
+.cache
+*.pyc
+*.egg-info
+*.swp
+tags
+node_modules
+swiss_accounting_integration/docs/current

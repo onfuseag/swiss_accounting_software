@@ -1,0 +1,10 @@
+root = true
+
+[*.{js, css}]
+indent_size = 2
+indent_style = space
+
+[*.py]
+tab_width = 2
+indent_size = 2
+indent_style = space

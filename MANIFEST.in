@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include swiss_accounting_integration *.css
+recursive-include swiss_accounting_integration *.csv
+recursive-include swiss_accounting_integration *.html
+recursive-include swiss_accounting_integration *.ico
+recursive-include swiss_accounting_integration *.js
+recursive-include swiss_accounting_integration *.json
+recursive-include swiss_accounting_integration *.md
+recursive-include swiss_accounting_integration *.png
+recursive-include swiss_accounting_integration *.py
+recursive-include swiss_accounting_integration *.svg
+recursive-include swiss_accounting_integration *.txt
+recursive-exclude swiss_accounting_integration *.pyc
