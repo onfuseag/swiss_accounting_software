@@ -1,11 +1,13 @@
 import frappe
 
+from frappe.desk.form.assign_to import add
+
 @frappe.whitelist()
 def bank_transaction_auto_match(doc, event=None): 
     
     # Only do this for Unreconciled docs
     if doc.status == "Unreconciled": 
-        
+
         # Check that it has a reference number
         if doc.reference_number is not None:
             
@@ -20,8 +22,8 @@ def bank_transaction_auto_match(doc, event=None):
                 # Correct invoice found, trying to reconcile
                 if invoices is not None: 
                     
-                    # Define the threshold, 0.05 bookings will go into write off account
-                    threshold = 0.05
+                    # Get the payment difference default from storage
+                    threshold = frappe.db.get_value("Swiss QR Bill Settings", doc.company, "threshold_payment_difference")
                     
                     # Loop through invoices and create list
                     for inv in invoices: 
@@ -30,7 +32,7 @@ def bank_transaction_auto_match(doc, event=None):
                         if (doc.currency == inv.currency):
                             
                             
-                            if abs(inv.outstanding_amount-doc.deposit) <= threshold:
+                            if abs(inv.outstanding_amount - doc.deposit) <= threshold:
                                 
                                 deduction_entry = []
                                 
@@ -86,4 +88,22 @@ def bank_transaction_auto_match(doc, event=None):
                                     })
                                     
                                     doc.save(ignore_permissions=True)
-                                    
+
+                                    return
+    
+    # Reload and see if the doc has been changed to reconciled
+    doc.reload()
+
+    # If the Payment is unreconciled, we get the user from swiss qr Bill settings and assign it to the dataset
+    if doc.status == "Unreconciled": 
+        assign_unreconciled_transactions_to = frappe.db.get_value("Swiss QR Bill Settings", doc.company, "assign_unreconciled_transactions_to")
+
+        if assign_unreconciled_transactions_to:
+            args = {
+                "assign_to": [assign_unreconciled_transactions_to],
+                "doctype": "Bank Transaction",
+                "name": doc.name,
+                "description": "Unreconciled Payment",
+            }
+
+            add(args, ignore_permissions=True)

@@ -9,7 +9,8 @@
   "company",
   "qr_code_type",
   "bank_account",
-  "assign_unreconciled_transactions_to"
+  "assign_unreconciled_transactions_to",
+  "threshold_payment_difference"
  ],
  "fields": [
   {
@@ -42,11 +43,17 @@
    "fieldtype": "Link",
    "label": "Assign unreconciled transactions to",
    "options": "User"
+  },
+  {
+   "fieldname": "threshold_payment_difference",
+   "fieldtype": "Currency",
+   "label": "Threshold payment difference",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-08 15:01:54.500338",
+ "modified": "2024-07-10 09:09:09.211523",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss QR Bill Settings",
