@@ -15,9 +15,12 @@ def bank_transaction_auto_match(doc, event=None):
             if len(doc.reference_number) > 10: 
                 
                 # Fetch the holidays in the holiday list for the current year
-                invoices = frappe.get_all('Sales Invoice', fields=['name','outstanding_amount','customer', 'debit_to', 'currency'], filters={
-                    'esr_reference_code': doc.reference_number
-                })
+                invoices = frappe.get_all('Sales Invoice', fields=['name','outstanding_amount','customer', 'debit_to', 'currency'], 
+                    filters={
+                        'esr_reference_code': doc.reference_number, 
+                        'status' : ['!=', 'Cancelled']
+                    }
+                )
                 
                 # Correct invoice found, trying to reconcile
                 if invoices is not None: 
