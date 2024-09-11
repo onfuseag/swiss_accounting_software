@@ -12,10 +12,10 @@ def generate_pain001_xml(doc):
     if bank_account.iban is None or bank_account.branch_code is None: 
         frappe.throw("No IBAN or Branch code set for this bank account")
 
-    payments= 
+    #payments= 
     
     
-    return frappe.render_template("pain001.html", data(doc, bank_account, payments))
+    #return frappe.render_template("pain001.html", data(doc, bank_account, payments))
 
 
 def generate_template_xml(doc):
@@ -27,7 +27,3 @@ def generate_template_xml(doc):
     
     
     return frappe.render_template("pain001.html", data(doc, bank_account, payments))
-
-@frappe.whitelist()
-def get_qr_code_from_file(file):
-    
