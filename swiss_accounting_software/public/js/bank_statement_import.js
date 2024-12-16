@@ -16,6 +16,7 @@ frappe.ui.form.on("Bank Statement Import", {
 
             let imagefile = new FormData()
             imagefile.append('file_url','/private/files/'+value_path[1])
+            imagefile.append('is_private', "1")
             console.log(imagefile)
 
             fetch('/api/method/upload_file',{
@@ -25,6 +26,7 @@ frappe.ui.form.on("Bank Statement Import", {
                 },
                 method:'POST',
                 body:imagefile,
+
 
             })
             .then(res=>res.json())
