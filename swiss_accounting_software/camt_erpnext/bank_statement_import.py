@@ -25,7 +25,7 @@ def convert_xml_to_csv(file):
     current_date= datetime.now()
     current_datetime = current_date.strftime("%d-%m-%Y %H:%M:%S")
 
-    filename = f'{frappe.utils.get_bench_path()}/sites/{frappe.utils.get_site_base_path()[2:]}/public/files/{current_datetime}.csv'
+    filename = f'{frappe.utils.get_bench_path()}/sites/{frappe.utils.get_site_base_path()[2:]}/private/files/{current_datetime}.csv'
     
     # Parse the XML and remove namespace
     root = remove_namespaces(xml_file)

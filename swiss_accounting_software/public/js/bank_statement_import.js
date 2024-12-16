@@ -11,11 +11,11 @@ frappe.ui.form.on("Bank Statement Import", {
 
 
             var value = r.message
-            var value_path = value.split('files/')
+            var value_path = value.split('private/files/')
             console.log("this is value path "+ value_path)
 
             let imagefile = new FormData()
-            imagefile.append('file_url','/files/'+value_path[1])
+            imagefile.append('file_url','/private/files/'+value_path[1])
             console.log(imagefile)
 
             fetch('/api/method/upload_file',{
