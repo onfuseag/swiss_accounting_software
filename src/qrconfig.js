@@ -19,8 +19,8 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
  * @param {Object} companyAddress Company Address
  * @param {String} companyAddressCode ALPHA-2 Address Code
  * @param {String} iban QR-IBAN
- * @param {String} customer Customer Name
- * @param {Object} customerAddress Customer Address
+ * @param {String} customer Customer Name, max 70 Chars, rest will be removed
+ * @param {Object} customerAddress Customer Address, max 70 Chars, rest will be removed
  * @param {String} customerAddressCode Customer Address Code
  * @returns Address Configuration
  */
@@ -48,8 +48,8 @@ export const generateQRConfig = (
     country: companyAddressCode, // Bank Country
   },
   debtor: {
-    name: customer, // Customer Doctype
-    address: ((customerAddress.address_line2 != null) ? `${customerAddress.address_line1} ${customerAddress.address_line2}` :  customerAddress.address_line1), // Address Line 1 & 2
+    name: customer.substring(0, 70), // Customer Doctype,
+    address: ((customerAddress.address_line2 != null) ? `${customerAddress.address_line1} ${customerAddress.address_line2}` :  customerAddress.address_line1).substring(0, 70), // Address Line 1 & 2
     zip: customerAddress.pincode, // Sales Invoice PCode
     city: customerAddress.city, // Sales Invoice City
     country: customerAddressCode, // Sales Invoice Country
