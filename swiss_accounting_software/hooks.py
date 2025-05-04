@@ -67,7 +67,7 @@ doctype_js = {"Bank Statement Import" : "public/js/bank_statement_import.js"}
 # ------------
 
 # before_install = "swiss_accounting_software.install.before_install"
-# after_install = "swiss_accounting_software.install.after_install"
+after_install = "swiss_accounting_software.install.after_install"
 
 # Desk Notifications
 # ------------------
