@@ -6,19 +6,30 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "steuerziffer_ch"
+  "steuerziffer_ch",
+  "description"
  ],
  "fields": [
   {
    "fieldname": "steuerziffer_ch",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Steuerziffer CH",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Description",
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-04 10:38:21.122208",
+ "modified": "2025-05-04 19:58:52.852619",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Steuerziffer CH",
@@ -77,6 +88,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
