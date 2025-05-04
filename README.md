@@ -2,6 +2,8 @@
 
 ERPNexts functionality with Swiss QR Integration and payment automation
 
+### Wiki
+Guides are available on [docs.onfuse.ch/swiss-accounting-software](https://docs.onfuse.ch/swiss-accounting-software/)
 
 ### Structure
 
