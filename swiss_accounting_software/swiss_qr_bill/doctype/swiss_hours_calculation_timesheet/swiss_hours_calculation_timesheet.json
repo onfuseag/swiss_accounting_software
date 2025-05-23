@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-16 11:22:22.098099",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_type",
+  "count_as_attendance",
+  "hours",
+  "column_break_gvvh"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Activity Type",
+   "options": "Activity Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_gvvh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "count_as_attendance",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Count as Attendance",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-21 09:55:36.590216",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Hours Calculation Timesheet",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

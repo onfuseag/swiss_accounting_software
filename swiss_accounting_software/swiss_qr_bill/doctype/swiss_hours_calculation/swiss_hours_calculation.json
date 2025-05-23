@@ -1,0 +1,250 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-05-16 10:13:51.636951",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_snoh",
+  "employee",
+  "employee_name",
+  "email",
+  "employment_type",
+  "date_of_joining",
+  "relieving_date",
+  "information",
+  "column_break_hczl",
+  "amended_from",
+  "status",
+  "from_date",
+  "to_date",
+  "section_break_tasw",
+  "previous_hours",
+  "required_hours",
+  "worked_hours",
+  "new_balance",
+  "column_break_dwck",
+  "section_break_kbtg",
+  "leaves",
+  "section_break_smxp",
+  "timesheets",
+  "section_break_vppw",
+  "additional"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_snoh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hczl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_tasw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "previous_hours",
+   "fieldtype": "Float",
+   "label": "Previous Hours",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_hours",
+   "fieldtype": "Float",
+   "label": "Required Hours",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "worked_hours",
+   "fieldtype": "Float",
+   "label": "Worked Hours",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dwck",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_kbtg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_smxp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_vppw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "information",
+   "fieldtype": "Data",
+   "label": "Information"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employment_type",
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employment Type",
+   "options": "Employment Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_balance",
+   "fieldtype": "Float",
+   "label": "New Balance",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leaves",
+   "fieldtype": "Table",
+   "label": "Leaves",
+   "options": "Swiss Hours Calculation Leaves"
+  },
+  {
+   "fieldname": "timesheets",
+   "fieldtype": "Table",
+   "label": "Timesheet",
+   "options": "Swiss Hours Calculation Timesheet"
+  },
+  {
+   "fieldname": "additional",
+   "fieldtype": "Table",
+   "label": "Additional",
+   "options": "Swiss Hours Calculation Additional"
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.relieving_date",
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Relieving Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.prefered_email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Swiss Hours Calculation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-05-23 11:05:14.452185",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Hours Calculation",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee"
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

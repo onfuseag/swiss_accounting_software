@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-16 09:56:25.068538",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_type",
+  "count_as_attendance",
+  "column_break_ubod"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Activity Type",
+   "options": "Activity Type",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "count_as_attendance",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Count as attendance"
+  },
+  {
+   "fieldname": "column_break_ubod",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-16 10:06:51.607131",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Calculation Settings Activities",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

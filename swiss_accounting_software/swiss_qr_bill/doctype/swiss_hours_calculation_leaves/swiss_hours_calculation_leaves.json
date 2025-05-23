@@ -1,0 +1,73 @@
+{
+ "_comments": "[{\"comment\": \"Action Failed<br><br><pre><code>Traceback (most recent call last):\\n  File \\\"apps/frappe/frappe/mod...\", \"by\": \"Administrator\", \"name\": \"aro8g6bms7\"}]",
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-16 11:15:59.471047",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "leave_type",
+  "opening_balance",
+  "new_allocation",
+  "column_break_dsly",
+  "leaves_taken",
+  "closing_balance"
+ ],
+ "fields": [
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Leave Type",
+   "options": "Leave Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "opening_balance",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Opening balance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_allocation",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "New Leave(s) allocated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dsly",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leaves_taken",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Leave(s) Taken",
+   "read_only": 1
+  },
+  {
+   "fieldname": "closing_balance",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Closing Balance",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-22 15:49:04.484526",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Hours Calculation Leaves",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

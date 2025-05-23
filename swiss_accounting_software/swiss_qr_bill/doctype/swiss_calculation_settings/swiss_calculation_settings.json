@@ -1,0 +1,179 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-05-16 09:53:31.216151",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employment_type",
+  "enabled",
+  "count_balance",
+  "count_leaves",
+  "working_hours",
+  "column_break_mvmd",
+  "generate_report_on",
+  "start_of_calculation",
+  "end_of_calculation",
+  "section_break_wyew",
+  "information",
+  "timesheet_activities",
+  "section_break_rkuo",
+  "hourly_allowance",
+  "daily_allowance",
+  "daily_allowance_after_hours",
+  "column_break_xbfu",
+  "max_allowance_per_day",
+  "monthly_allowance"
+ ],
+ "fields": [
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employment Type",
+   "options": "Employment Type",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "count_leaves",
+   "fieldtype": "Check",
+   "label": "Count Leaves"
+  },
+  {
+   "fieldname": "column_break_mvmd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "generate_report_on",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Generate Report On",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_of_calculation",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Start of Calculation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_of_calculation",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "End of Calculation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_wyew",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "information",
+   "fieldtype": "Data",
+   "label": "Information"
+  },
+  {
+   "fieldname": "timesheet_activities",
+   "fieldtype": "Table",
+   "label": "Timesheet Activities",
+   "options": "Swiss Calculation Settings Activities"
+  },
+  {
+   "fieldname": "section_break_rkuo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hourly_allowance",
+   "fieldtype": "Currency",
+   "label": "Hourly Allowance"
+  },
+  {
+   "fieldname": "daily_allowance",
+   "fieldtype": "Currency",
+   "label": "Daily Allowance"
+  },
+  {
+   "fieldname": "daily_allowance_after_hours",
+   "fieldtype": "Float",
+   "label": "Daily Allowance after Hours"
+  },
+  {
+   "fieldname": "column_break_xbfu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "max_allowance_per_day",
+   "fieldtype": "Currency",
+   "label": "Max Allowance per Day"
+  },
+  {
+   "fieldname": "working_hours",
+   "fieldtype": "Float",
+   "label": "Working hours"
+  },
+  {
+   "fieldname": "monthly_allowance",
+   "fieldtype": "Currency",
+   "label": "Monthly Allowance"
+  },
+  {
+   "default": "0",
+   "fieldname": "count_balance",
+   "fieldtype": "Check",
+   "label": "Count Balance"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-23 10:09:56.848828",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Calculation Settings",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

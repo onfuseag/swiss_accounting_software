@@ -111,23 +111,12 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"swiss_accounting_software.tasks.all"
-# 	],
-# 	"daily": [
-# 		"swiss_accounting_software.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"swiss_accounting_software.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"swiss_accounting_software.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"swiss_accounting_software.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+
+ 	"daily": [
+ 		"swiss_accounting_software.swiss_qr_bill.doctype.swiss_hours_calculation.swiss_hours_calculation.enqueue_hours_calculation"
+ 	]
+}
 
 # Testing
 # -------
