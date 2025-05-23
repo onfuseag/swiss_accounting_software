@@ -1,5 +1,5 @@
 {
- "_comments": "[{\"comment\": \"Action Failed<br><br><pre><code>Traceback (most recent call last):\\n  File \\\"apps/frappe/frappe/mod...\", \"by\": \"Administrator\", \"name\": \"aro8g6bms7\"}]",
+ "_comments": "[{\"comment\": \"Action Failed<br><br><pre><code>Traceback (most recent call last):\\n  File \\\"apps/frappe/frappe/mod...\", \"by\": \"Administrator\", \"name\": \"aro8g6bms7\"}, {\"comment\": \"Action Failed<br><br><pre><code>Traceback (most recent call last):\\n  File \\\"apps/frappe/frappe/mod...\", \"by\": \"Administrator\", \"name\": \"ce20vfrt4l\"}]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2025-05-16 11:15:59.471047",
@@ -9,7 +9,7 @@
  "field_order": [
   "leave_type",
   "opening_balance",
-  "new_allocation",
+  "new_allocations",
   "column_break_dsly",
   "leaves_taken",
   "closing_balance"
@@ -27,14 +27,7 @@
    "fieldname": "opening_balance",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Opening balance",
-   "read_only": 1
-  },
-  {
-   "fieldname": "new_allocation",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "New Leave(s) allocated",
+   "label": "Opening Balance",
    "read_only": 1
   },
   {
@@ -54,13 +47,20 @@
    "in_list_view": 1,
    "label": "Closing Balance",
    "read_only": 1
+  },
+  {
+   "fieldname": "new_allocations",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "New Leave(s) allocated",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-22 15:49:04.484526",
+ "modified": "2025-05-23 15:22:09.226784",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss Hours Calculation Leaves",

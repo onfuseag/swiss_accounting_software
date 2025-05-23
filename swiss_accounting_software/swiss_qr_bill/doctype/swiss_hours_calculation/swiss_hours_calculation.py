@@ -5,8 +5,6 @@ import frappe
 from frappe.model.document import Document
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from pypika import functions as fn
-
 
 class SwissHoursCalculation(Document):
 	
@@ -156,6 +154,7 @@ def calculate_hours_for_employee(doc):
 		doc.append("leaves", {
 			"leave_type": lv["leave_type"],
 			"opening_balance": lv["opening_balance"], 
+			"new_allocations": lv["new_allocations"],
 			"leaves_taken": lv["consumed_leaves"], 
 			"closing_balance": lv["closing_balance"]
 		})
@@ -292,65 +291,104 @@ def _leaves_taken(employee: str, leave_type: str, from_date: str, to_date: str) 
 	return sum(0.5 if r.status == "Half Day" else 1.0 for r in records)
 
 
-# Gets the leave application summary table
 def get_leave_allocation_summary_attendance_based(from_date, to_date, employee):
-	# ─ 1 ─ validation (unchanged) -------------------------------------------
-	if not all([from_date, to_date, employee]):
-		frappe.throw(_("from_date, to_date and employee are required"))
+    """Return a leave‑type wise summary for the employee within the requested window.
 
-	from_date = frappe.utils.getdate(from_date)
-	to_date   = frappe.utils.getdate(to_date)
+    For every active *Leave Type* the function shows how the balance moved
+    during the period delimited by **from_date** and **to_date** (both
+    inclusive):
 
-	if from_date > to_date:
-		frappe.throw(_("Start date cannot be after end date"))
+    * **opening_balance** – balance on the day *before* ``from_date``.
+    * **new_allocations** – fresh allocations whose *effective date* lies
+      inside the window.
+    * **consumed_leaves** – approved leave days whose *leave period* lies
+      inside the window.
+    * **closing_balance** – balance on ``to_date`` (opening + allocations − consumed).
+    """
 
-	# ─ 2 ─ grab every active Leave Type (unchanged) -------------------------
-	leave_types = frappe.get_all("Leave Type", fields=["name", "is_lwp", "is_optional_leave", "is_compensatory"])
+    # ─ 1 ─ validation ------------------------------------------------------
+    if not all([from_date, to_date, employee]):
+        frappe.throw(_("from_date, to_date and employee are required"))
 
-	# ─ 3 ─ year anchor ------------------------------------------------------
-	year_start = frappe.utils.getdate(f"{from_date.year}-01-01")	  # 1 Jan of that year
+    from_date = frappe.utils.getdate(from_date)
+    to_date = frappe.utils.getdate(to_date)
 
-	# ─ 4 ─ crunch numbers ---------------------------------------------------
-	summary = []
-	for lt in leave_types:
-		lt_name = lt["name"]
+    if from_date > to_date:
+        frappe.throw(_("Start date cannot be after end date"))
 
-		# opening = allocation − leaves taken *from 1 Jan up to day-before window*
-		opening_balance = 0.0
+    # ─ 2 ─ fetch active leave types ---------------------------------------
+    leave_types = frappe.get_all(
+        "Leave Type",
+        fields=[
+            "name",
+            "is_lwp",
+            "is_optional_leave",
+            "is_compensatory",
+        ],
+    )
 
-		# We dont want to count these as these optional leaves should not be reflected annually, just monthly
-		if lt.is_lwp == 0 and lt.is_optional_leave == 0 and lt.is_compensatory == 0:
-			opening_balance = (
-				_allocated_on(employee, lt_name, frappe.utils.add_days(from_date, -1))
-				- _leaves_taken(
-					employee,
-					lt_name,
-					from_date=year_start,
-					to_date=frappe.utils.add_days(from_date, -1),
-				)
-			)
+    # ─ 3 ─ anchors ---------------------------------------------------------
+    day_before_window = frappe.utils.add_days(from_date, -1)
 
-		# consumed within requested window
-		consumed_leaves = _leaves_taken(
-			employee, lt_name, from_date=from_date, to_date=to_date
-		)
+    # ─ 4 ─ crunch numbers --------------------------------------------------
+    summary = []
+    for lt in leave_types:
+        lt_name = lt.name
 
-		# closing = opening − consumed
-		closing_balance = opening_balance - consumed_leaves
+        # Skip optional/LWP/compensatory when computing annual running totals
+        is_countable = (
+            lt.is_lwp == 0 and lt.is_optional_leave == 0 and lt.is_compensatory == 0
+        )
 
-		# keep only leave types with a non-zero final balance
-		if closing_balance:
-			summary.append(
-				{
-					"leave_type": lt_name,
-					"opening_balance": opening_balance,
-					"consumed_leaves": consumed_leaves,
-					"closing_balance": closing_balance,
-				}
-			)
+        # ----- opening balance (as at day_before_window) -------------------
+        opening_balance = 0.0
+        if is_countable:
+            opening_balance = (
+                _allocated_on(employee, lt_name, day_before_window)
+                - _leaves_taken(
+                    employee,
+                    lt_name,
+                    from_date=frappe.utils.getdate(f"{from_date.year}-01-01"),
+                    to_date=day_before_window,
+                )
+            )
 
-	summary.sort(key=lambda r: r["leave_type"])
-	return summary
+        # ----- new allocations during the window --------------------------
+        # We compute the delta between allocations effective up to to_date
+        # minus allocations effective up to the day before the window.
+        new_allocations = 0.0
+        if is_countable:
+            allocated_before = _allocated_on(employee, lt_name, day_before_window)
+            allocated_until_end = _allocated_on(employee, lt_name, to_date)
+            new_allocations = allocated_until_end - allocated_before
+
+        # ----- leaves consumed inside the window ---------------------------
+        consumed_leaves = _leaves_taken(
+            employee, lt_name, from_date=from_date, to_date=to_date
+        )
+
+        # ----- closing balance --------------------------------------------
+        closing_balance = opening_balance + new_allocations - consumed_leaves
+
+        # Include row if there was any movement or non‑zero closing balance
+        if any([
+            opening_balance,
+            new_allocations,
+            consumed_leaves,
+            closing_balance,
+        ]):
+            summary.append(
+                {
+                    "leave_type": lt_name,
+                    "opening_balance": opening_balance,
+                    "new_allocations": new_allocations,
+                    "consumed_leaves": consumed_leaves,
+                    "closing_balance": closing_balance,
+                }
+            )
+
+    summary.sort(key=lambda r: r["leave_type"])
+    return summary
 
 
 # takes attendance records as input, returns hours in a float format
