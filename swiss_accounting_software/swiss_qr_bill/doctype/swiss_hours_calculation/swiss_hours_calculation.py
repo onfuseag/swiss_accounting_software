@@ -283,6 +283,7 @@ def _leaves_taken(employee: str, leave_type: str, from_date: str, to_date: str) 
 			"leave_type": leave_type,
 			"attendance_date": ("between", [from_date, to_date]),
 			"status": ("in", ["On Leave", "Half Day"]),
+			"docstatus": ["not in", [0,2]], # Not cancelled or draft
 		},
 		fields=["status"],
 	)
@@ -412,7 +413,7 @@ def get_hours_from_attendance(attendance_records, emp_working_hours, count_leave
 			if count_leaves == 1:
 				for leave_type in leave_types: 
 					if record.leave_type == leave_type.name:
-						if leave_type.is_lwp == 1 or leave_type.is_optional_leave == 1:
+						if leave_type.is_lwp == 0: # Skip leave without pay
 							if record.status == "Half Day": 
 								total_time = total_time + (emp_working_hours/2)
 							else:
