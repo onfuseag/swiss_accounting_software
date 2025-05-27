@@ -144,8 +144,15 @@ def calculate_hours_for_employee(doc):
 			"hours": tsa.hours
 		})
 
-	# Calculate the new allowance for the timesheets as we have to do this daily
-	allowance = allowance + get_timesheet_allowance_daily(doc.employee, doc.from_date, doc.to_date, calculation_setting)
+	# If the employee does not have all activities active, we should not count them
+	inactiveActivity = False
+	for setting in calculation_setting.timesheet_activities:
+		if setting.count_as_attendance == 0: 
+			inactiveActivity = True
+
+	if inactiveActivity == False: 
+		# Calculate the new allowance for the timesheets as we have to do this daily
+		allowance = allowance + get_timesheet_allowance_daily(doc.employee, doc.from_date, doc.to_date, calculation_setting)
 
 	# STEP 8, Get leaves from HRMS
 	leaves = get_leave_allocation_summary_attendance_based(doc.from_date, doc.to_date, doc.employee)
