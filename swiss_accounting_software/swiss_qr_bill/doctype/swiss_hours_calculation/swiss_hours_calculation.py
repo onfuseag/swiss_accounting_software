@@ -464,7 +464,6 @@ def enqueue_hours_calculation():
 		queue="long",
 		timeout=60 * 30, # 30 mins wait
 	)
-    return _("Swiss hours calculation has been queued.")
 
 
 def run_hours_job():
