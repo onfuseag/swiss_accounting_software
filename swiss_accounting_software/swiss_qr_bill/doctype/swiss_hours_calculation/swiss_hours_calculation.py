@@ -416,6 +416,10 @@ def get_hours_from_attendance(attendance_records, emp_working_hours, count_leave
 		
 		if record.status == "Half Day" or record.status == "On Leave":
 
+			# If the user did still work on this day, we still want to count it
+			if record.working_hours > 0.0: 
+				total_time = total_time + record.working_hours
+			
 			# Only if the user wants us to count leaves
 			if count_leaves == 1:
 				for leave_type in leave_types: 
