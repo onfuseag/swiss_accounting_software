@@ -540,7 +540,8 @@ def create_hours_calculation():
 				latest_doc = frappe.get_all(
 					"Swiss Hours Calculation", 
 					filters={
-						"employee": employee.name
+						"employee": employee.name,
+						"docstatus" : 1
 					},
 					fields=["name", "new_balance"], 
 					order_by="to_date desc", 
