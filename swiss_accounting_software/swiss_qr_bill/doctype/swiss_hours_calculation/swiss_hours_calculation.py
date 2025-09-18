@@ -508,8 +508,13 @@ def create_hours_calculation():
 		# Start date: configured day of previous month
 		prev_month_start = previous_month.replace(day=setting.start_of_calculation)
 		
-		# End date: configured day of current month
-		this_month_end = today.replace(day=setting.end_of_calculation)
+		# End date: configured day of current month, if this is -1, we want the last date of last month
+		if setting.end_of_calculation == -1:
+			this_month_end = frappe.utils.add_days(first_day_of_this_month, -1)
+		else:
+			this_month_end = today.replace(day=setting.end_of_calculation)
+			
+		
 
 		# Fetch relevant employees
 		employees = frappe.db.get_all(
