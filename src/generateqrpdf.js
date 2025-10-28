@@ -9,9 +9,40 @@ WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
 MERCHANTABLITY OR NON-INFRINGEMENT.
 
 ***************************************************************************** */
-import SwissQRBill from "swissqrbill/lib/browser";
+
+
+
+import PDFDocument from "pdfkit/js/pdfkit.standalone.js";
+import blobStream from "blob-stream";
+import { SwissQRBill } from "swissqrbill/pdf";
 import { showError, showProgress, uploadFileAsAttachment } from "./utils";
 
+export const generateQRPDF = (paymentinfo, docname, frm, papersize, language) => {
+  try {
+    const stream = new BlobStream();
+    const pdf = new PDFDocument();
+    const qrBill = new SwissQRBill(paymentinfo);
+
+    qrBill.attachTo(pdf);
+
+    // Show progress while generating
+    showProgress(60, "generating pdf...");
+
+    
+    stream.on("finish", () => {
+      showProgress(80, "uploading pdf...");
+
+      
+      const blob = stream.toBlob("application/pdf");
+
+      uploadFileAsAttachment(blob, docname, frm);
+    });
+  } catch (error) {
+    showError(error);
+  }
+};
+
+/*
 export const generateQRPDF = (
   paymentinfo,
   docname,
@@ -37,3 +68,4 @@ export const generateQRPDF = (
     showError(error);
   }
 };
+*/
