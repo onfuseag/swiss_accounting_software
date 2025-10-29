@@ -9,7 +9,6 @@ WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
 MERCHANTABLITY OR NON-INFRINGEMENT.
 
 ***************************************************************************** */
-import SwissQRBill from "swissqrbill/pdf";
 import { calculateQRReferenceChecksum } from "swissqrbill/utils"
 import { FRAPPE_FILE_UPLOAD_ENDPOINT } from "./constant";
 import { updateMessage } from "./message";

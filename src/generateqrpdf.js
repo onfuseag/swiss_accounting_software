@@ -10,62 +10,41 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 
 ***************************************************************************** */
 
-
-
 import PDFDocument from "pdfkit/js/pdfkit.standalone.js";
-import blobStream from "blob-stream";
 import { SwissQRBill } from "swissqrbill/pdf";
 import { showError, showProgress, uploadFileAsAttachment } from "./utils";
 
-export const generateQRPDF = (paymentinfo, docname, frm, papersize, language) => {
+export const generateQRPDF = (paymentinfo, docname, frm, language) => {
+
   try {
-    const stream = new BlobStream();
+    showProgress(10, "initializing pdf...");
+
     const pdf = new PDFDocument();
-    const qrBill = new SwissQRBill(paymentinfo);
+    const chunks = [];
 
-    qrBill.attachTo(pdf);
-
-    // Show progress while generating
-    showProgress(60, "generating pdf...");
+    // Collect bytes directly from pdfkit
+    pdf.on("data", (d) => chunks.push(d));
+    pdf.on("error", showError);
 
     
-    stream.on("finish", () => {
+    pdf.on("end", () => {
+
       showProgress(80, "uploading pdf...");
-
-      
-      const blob = stream.toBlob("application/pdf");
-
+      // Create a Blob from the chunks
+      const blob = new Blob(chunks, { type: "application/pdf" });
       uploadFileAsAttachment(blob, docname, frm);
-    });
-  } catch (error) {
-    showError(error);
-  }
-};
 
-/*
-export const generateQRPDF = (
-  paymentinfo,
-  docname,
-  frm,
-  papersize,
-  language
-) => {
-  const data = paymentinfo;
-  const stream = new SwissQRBill.BlobStream();
-  try {
-    const pdf = new SwissQRBill.PDF(data, stream, {
-      language: language || "DE",
-      size: papersize || "A6/5",
     });
+
+    // Attach the Swiss QR bill
+    const qrBill = new SwissQRBill(paymentinfo);
+    qrBill.attachTo(pdf);
+
     showProgress(60, "generating pdf...");
-    pdf.on("finish", () => {
-      // const url = stream.toBlobURL("application/pdf");
-      // const triggerDownload()
-      showProgress(80, "uploading pdf...");
-      uploadFileAsAttachment(stream.toBlob(), docname, frm);
-    });
+    
+    pdf.end(); // finalize    
+
   } catch (error) {
     showError(error);
   }
 };
-*/
