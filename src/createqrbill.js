@@ -68,5 +68,7 @@ export const createQRBill = async (frm) => {
     reference
   );
 
-  generateQRPDF(config, frm.docname, frm, "A4", language);
+  // frm.docname is correct
+  generateQRPDF(config, frm.docname, frm, language);
+
 };

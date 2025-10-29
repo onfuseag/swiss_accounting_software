@@ -2,6 +2,10 @@
 
 ERPNexts functionality with Swiss QR Integration and payment automation
 
+### Important information
+This package has been updated to support Address Type “S” in accordance with the new Swiss banking standard taking effect in November 2025.
+It is recommended to clear the browser cache in order to geneerate the updated invoice.
+
 ### Wiki
 Guides are available on [docs.onfuse.ch/swiss-accounting-software](https://docs.onfuse.ch/swiss-accounting-software/)
 

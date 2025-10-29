@@ -9,30 +9,41 @@ WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
 MERCHANTABLITY OR NON-INFRINGEMENT.
 
 ***************************************************************************** */
-import SwissQRBill from "swissqrbill/lib/browser";
+
+import PDFDocument from "pdfkit/js/pdfkit.standalone.js";
+import { SwissQRBill } from "swissqrbill/pdf";
 import { showError, showProgress, uploadFileAsAttachment } from "./utils";
 
-export const generateQRPDF = (
-  paymentinfo,
-  docname,
-  frm,
-  papersize,
-  language
-) => {
-  const data = paymentinfo;
-  const stream = new SwissQRBill.BlobStream();
+export const generateQRPDF = (paymentinfo, docname, frm, language) => {
+
   try {
-    const pdf = new SwissQRBill.PDF(data, stream, {
-      language: language || "DE",
-      size: papersize || "A6/5",
-    });
-    showProgress(60, "generating pdf...");
-    pdf.on("finish", () => {
-      // const url = stream.toBlobURL("application/pdf");
-      // const triggerDownload()
+    showProgress(10, "initializing pdf...");
+
+    const pdf = new PDFDocument();
+    const chunks = [];
+
+    // Collect bytes directly from pdfkit
+    pdf.on("data", (d) => chunks.push(d));
+    pdf.on("error", showError);
+
+    
+    pdf.on("end", () => {
+
       showProgress(80, "uploading pdf...");
-      uploadFileAsAttachment(stream.toBlob(), docname, frm);
+      // Create a Blob from the chunks
+      const blob = new Blob(chunks, { type: "application/pdf" });
+      uploadFileAsAttachment(blob, docname, frm);
+
     });
+
+    // Attach the Swiss QR bill
+    const qrBill = new SwissQRBill(paymentinfo);
+    qrBill.attachTo(pdf);
+
+    showProgress(60, "generating pdf...");
+    
+    pdf.end(); // finalize    
+
   } catch (error) {
     showError(error);
   }
