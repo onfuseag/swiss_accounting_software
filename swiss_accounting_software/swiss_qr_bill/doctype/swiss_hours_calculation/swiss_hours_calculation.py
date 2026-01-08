@@ -197,7 +197,9 @@ def calculate_hours_for_employee(doc):
 	# Dont need the new balance if the setting forbids it
 	if calculation_setting.count_balance == 0:
 		doc.new_balance = 0.0
-	else: 
+	else:
+		if doc.previous_hours is None:
+			doc.previous_hours = 0 
 		doc.new_balance = doc.previous_hours + worked_hours - required_work_hours_total
 
 	# Finally set the calculation status to done
