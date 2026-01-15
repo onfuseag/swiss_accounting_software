@@ -10,10 +10,7 @@ app_icon = "octicon octicon-file-directory"
 app_color = "grey"
 app_email = "contact@onfuse.ch"
 app_license = "MIT"
-fixtures = [
-    {"dt": "Custom Field", "filters": [["fieldname", "in", ("esr_reference_code", 'tax_code', 'exported_to_abacus')]]}, 
-    {"doctype": "Custom Field", "filters": [["dt", "=", "Bank Statement Import"]]}
-]
+
 
 # Includes in <head>
 # ------------------
@@ -21,7 +18,9 @@ fixtures = [
 # include js, css files in header of desk.html
 # app_include_css = "/assets/swiss_accounting_software/css/swiss_accounting_software.css"
 # app_include_js = "/assets/swiss_accounting_software/js/swiss_accounting_software.js"
-app_include_js = "/assets/swiss_accounting_software/js/index.js"
+app_include_js = [
+    "index.bundle.js",
+]
 
 # include js in doctype views
 doctype_js = {"Bank Statement Import" : "public/js/bank_statement_import.js"}
@@ -100,9 +99,6 @@ after_install = "swiss_accounting_software.install.after_install"
 # Hook on document methods and events
 
 doc_events = {
-    "Abacus Export": {
-        "on_submit": "swiss_accounting_software.attach_xml",
-    }, 
     "Bank Transaction": {
         "on_submit": "swiss_accounting_software.camt_erpnext.bank_transaction_auto_match.bank_transaction_auto_match"
     },
