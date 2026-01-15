@@ -22,6 +22,6 @@ module.exports = {
       "public",
       "js"
     ),
-    filename: "index.js",
-  }
+    filename: "index.bundle.js",
+  },
 };
