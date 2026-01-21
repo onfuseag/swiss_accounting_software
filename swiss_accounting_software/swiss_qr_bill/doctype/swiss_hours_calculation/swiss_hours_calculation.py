@@ -273,8 +273,8 @@ def _allocated_on(employee: str, leave_type: str, as_on: str) -> float:
 			"employee": employee,
 			"leave_type": leave_type,
 			"docstatus": 1,			 # submitted only
-			"from_date": ("<=", as_on),
-			"to_date":   (">=", as_on),
+			"from_date": ("<", as_on),
+			"to_date":   (">", as_on),
 		},
 		pluck="total_leaves_allocated",
 	)
