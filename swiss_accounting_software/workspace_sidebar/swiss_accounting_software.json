@@ -1,0 +1,76 @@
+{
+ "app": "swiss_accounting_software",
+ "creation": "2026-01-20 11:12:36.979403",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "accounting",
+ "idx": 1,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "alarm-clock-check",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Swiss Hours Calculation",
+   "link_to": "Swiss Hours Calculation",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "settings",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Swiss Calculation Settings",
+   "link_to": "Swiss Calculation Settings",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 1,
+   "label": "Setup",
+   "link_to": "",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Steuerziffer CH ",
+   "link_to": "Steuerziffer CH",
+   "link_type": "DocType",
+   "navigate_to_tab": "Setup",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Swiss QR Bill Settings",
+   "link_to": "Swiss QR Bill Settings",
+   "link_type": "DocType",
+   "navigate_to_tab": "Setup",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-01-20 11:21:50.374774",
+ "modified_by": "Administrator",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Accounting Software",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Swiss Accounting Software"
+}
