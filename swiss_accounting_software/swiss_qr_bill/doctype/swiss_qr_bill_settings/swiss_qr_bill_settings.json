@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "autoname": "field:company",
  "creation": "2021-07-29 04:35:41.660087",
  "doctype": "DocType",
@@ -10,7 +11,10 @@
   "qr_code_type",
   "bank_account",
   "assign_unreconciled_transactions_to",
-  "threshold_payment_difference"
+  "threshold_payment_difference",
+  "section_break_ozfr",
+  "si_qr_on_submit",
+  "qr_bill_per_invoice"
  ],
  "fields": [
   {
@@ -49,14 +53,31 @@
    "fieldtype": "Currency",
    "label": "Threshold payment difference",
    "options": "User"
+  },
+  {
+   "fieldname": "section_break_ozfr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "si_qr_on_submit",
+   "fieldtype": "Check",
+   "label": "Automatically Create Sales Invoice PDF"
+  },
+  {
+   "default": "0",
+   "fieldname": "qr_bill_per_invoice",
+   "fieldtype": "Check",
+   "label": "QR Bill per invoice"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-10 09:09:09.211523",
+ "modified": "2026-08-17 14:12:37.286513",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss QR Bill Settings",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -72,6 +93,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

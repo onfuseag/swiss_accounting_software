@@ -18,12 +18,12 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/swiss_accounting_software/css/swiss_accounting_software.css"
 # app_include_js = "/assets/swiss_accounting_software/js/swiss_accounting_software.js"
-app_include_js = [
-    "index.bundle.js",
-]
 
 # include js in doctype views
-doctype_js = {"Bank Statement Import" : "public/js/bank_statement_import.js"}
+doctype_js = {
+	"Bank Statement Import": "public/js/bank_statement_import.js",
+	"Sales Invoice": "public/js/sales_invoice.js",
+}
 
 # include js, css files in header of web template
 # web_include_css = "/assets/swiss_accounting_software/css/swiss_accounting_software.css"
@@ -99,9 +99,13 @@ after_install = "swiss_accounting_software.install.after_install"
 # Hook on document methods and events
 
 doc_events = {
-    "Bank Transaction": {
-        "on_submit": "swiss_accounting_software.camt_erpnext.bank_transaction_auto_match.bank_transaction_auto_match"
-    },
+	"Bank Transaction": {
+		"on_submit": "swiss_accounting_software.camt_erpnext.bank_transaction_auto_match.bank_transaction_auto_match"
+	},
+	"Sales Invoice": {
+		"before_submit": "swiss_accounting_software.attach_pdf.sales_invoice_before_submit",
+		"on_submit": "swiss_accounting_software.attach_pdf.sales_invoice_on_submit",
+	},
 }
 
 # Scheduled Tasks
