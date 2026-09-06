@@ -56,9 +56,9 @@ def remove_existing_qr_pdf(doctype, docname):
 
 
 def sales_invoice_before_submit(doc, method=None):
-	from swiss_accounting_software.qr_bill import get_qr_reference
+	from swiss_accounting_software.qr_bill import get_payment_reference
 
-	doc.esr_reference_code = get_qr_reference(doc.name)
+	doc.esr_reference_code = get_payment_reference(doc)
 
 
 def sales_invoice_on_submit(doc, method=None):

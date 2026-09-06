@@ -1,5 +1,5 @@
 import frappe
-from frappe.desk.form.assign_to import add
+from frappe.desk.form.assign_to import _add
 from frappe.utils import flt
 
 
@@ -189,7 +189,7 @@ def _assign_unreconciled(doc):
 	if not assign_unreconciled_transactions_to:
 		return
 
-	add(
+	_add(
 		{
 			"assign_to": [assign_unreconciled_transactions_to],
 			"doctype": "Bank Transaction",

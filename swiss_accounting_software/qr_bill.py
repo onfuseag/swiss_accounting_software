@@ -11,6 +11,7 @@ A4_WIDTH_MM = 210
 A4_HEIGHT_MM = 297
 TEXT_SCALE = 0.9
 MOD10_TABLE = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5]
+VALID_REFERENCE_TYPES = ("QRR", "SCOR", "NON")
 
 
 def mod10_recursive(value: str) -> str:
@@ -21,10 +22,62 @@ def mod10_recursive(value: str) -> str:
 	return str((10 - carry) % 10)
 
 
+def get_qr_code_type(company: str | None) -> str:
+	if not company or not frappe.db.exists("Swiss QR Bill Settings", company):
+		return "QRR"
+	value = frappe.db.get_value("Swiss QR Bill Settings", company, "qr_code_type")
+	if value in VALID_REFERENCE_TYPES:
+		return value
+	return "QRR"
+
+
+QRR_BODY_LENGTH = 26
+SCOR_PAYLOAD_LENGTH = 21
+
+
+def invoice_number_part(docname: str, length: int) -> str:
+	digits = re.sub(r"\D", "", docname) or "0"
+	if len(digits) > length:
+		digits = digits[-length:]
+	return digits.zfill(length)
+
+
 def get_qr_reference(docname: str) -> str:
-	ref = docname.replace("-", "")[-7:]
-	body = f"000000000000000000{ref}0"
+	body = invoice_number_part(docname, QRR_BODY_LENGTH)
 	return f"{body}{mod10_recursive(body)}"
+
+
+def iso11649_check_digits(payload: str) -> str:
+	rearranged = f"{payload}RF00"
+	numeric = ""
+	for char in rearranged.upper():
+		if char.isdigit():
+			numeric += char
+		else:
+			numeric += str(ord(char) - ord("A") + 10)
+	return f"{98 - (int(numeric) % 97):02d}"
+
+
+def get_scor_reference(docname: str) -> str:
+	payload = invoice_number_part(docname, SCOR_PAYLOAD_LENGTH)
+	return f"RF{iso11649_check_digits(payload)}{payload}"
+
+
+def get_payment_reference(invoice, reference_type: str | None = None) -> str | None:
+	if reference_type is None:
+		reference_type = get_qr_code_type(invoice.company)
+	if reference_type == "NON":
+		return None
+
+	existing = (invoice.get("esr_reference_code") or "").replace(" ", "")
+	if reference_type == "SCOR":
+		if existing.upper().startswith("RF") and 5 <= len(existing) <= 25:
+			return existing.upper()
+		return get_scor_reference(invoice.name)
+
+	if existing.isdigit() and len(existing) == 27:
+		return existing
+	return get_qr_reference(invoice.name)
 
 
 def get_qr_language(language: str | None) -> str:
@@ -134,7 +187,8 @@ def build_qr_bill(
 			Decimal("0.01"), rounding=ROUND_HALF_UP
 		)
 
-	reference = invoice.esr_reference_code or get_qr_reference(invoice.name)
+	reference_type = settings.qr_code_type if settings.qr_code_type in VALID_REFERENCE_TYPES else "QRR"
+	reference = get_payment_reference(invoice, reference_type)
 
 	try:
 		return QRBill(
@@ -143,7 +197,7 @@ def build_qr_bill(
 			debtor=build_party(customer_name, customer_address, UltimateDebtor),
 			amount=amount,
 			currency=invoice.currency,
-			reference_type="QRR",
+			reference_type=reference_type,
 			reference=reference,
 			additional_information=additional_information or None,
 		)
