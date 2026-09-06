@@ -27,11 +27,13 @@
    "unique": 1
   },
   {
+   "default": "QRR",
+   "description": "<b>QRR</b>: 27-digit QR reference. Requires a QR-IBAN.<br><b>SCOR</b>: Creditor reference (ISO 11649, RF…). Requires a regular IBAN.<br><b>NON</b>: No payment reference. Requires a regular IBAN.",
    "fieldname": "qr_code_type",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "QR Code Type",
-   "options": "Type 1",
+   "options": "QRR\nSCOR\nNON",
    "reqd": 1
   },
   {
@@ -73,7 +75,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-17 14:12:37.286513",
+ "modified": "2026-09-06 19:48:00.000000",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss QR Bill Settings",
