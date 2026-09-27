@@ -4,6 +4,10 @@ import re
 import frappe
 from frappe import _
 from chqr import Creditor, QRBill, UltimateDebtor, ValidationError as QRValidationError
+from chqr.constants import ALLOWED_NOTIFICATION_TEXTS
+
+from swiss_accounting_software.billing_information import billing_information, fit_message, invoice_message
+from swiss_accounting_software.qr_bill_layout import wrap_additional_information
 
 QR_BILL_WIDTH_MM = 210
 QR_BILL_HEIGHT_MM = 108
@@ -99,7 +103,7 @@ def get_qr_language(language: str | None) -> str:
 def generate_qr_slip_pdfs(invoice) -> list[bytes]:
 	language = get_qr_language(invoice.language)
 	return [
-		svg_to_pdf(build_qr_bill(invoice, **entry).generate_svg(language=language))
+		svg_to_pdf(render_qr_bill_svg(build_qr_bill(invoice, **entry), language))
 		for entry in get_qr_bill_entries(invoice)
 	]
 
@@ -108,7 +112,13 @@ def generate_qr_slip_pdf(invoice) -> bytes:
 	return generate_qr_slip_pdfs(invoice)[0]
 
 
+def render_qr_bill_svg(bill: QRBill, language: str) -> str:
+	svg = bill.generate_svg(language=language)
+	return wrap_additional_information(svg, bill.additional_information)
+
+
 def get_qr_bill_entries(invoice) -> list[dict]:
+	message = invoice_message(invoice.name, invoice.posting_date, get_qr_language(invoice.language))
 	if should_create_qr_per_payment_term(invoice):
 		rows = [row for row in invoice.payment_schedule if _term_amount(row) > 0]
 		if rows:
@@ -116,7 +126,9 @@ def get_qr_bill_entries(invoice) -> list[dict]:
 			return [
 				{
 					"amount": _term_amount(row),
-					"additional_information": payment_term_message(row, idx, total),
+					"additional_information": (
+						f"{message} - {payment_term_message(row, idx, total)}" if total > 1 else message
+					),
 				}
 				for idx, row in enumerate(rows, start=1)
 			]
@@ -126,7 +138,7 @@ def get_qr_bill_entries(invoice) -> list[dict]:
 			"amount": Decimal(str(invoice.outstanding_amount or 0)).quantize(
 				Decimal("0.01"), rounding=ROUND_HALF_UP
 			),
-			"additional_information": None,
+			"additional_information": message,
 		}
 	]
 
@@ -191,6 +203,23 @@ def build_qr_bill(
 	reference = get_payment_reference(invoice, reference_type)
 
 	try:
+		information = billing_information(
+			invoice.name,
+			invoice.posting_date,
+			frappe.db.get_value("Company", invoice.company, "tax_id"),
+		)
+		if additional_information is None:
+			additional_information = invoice_message(
+				invoice.name, invoice.posting_date, get_qr_language(invoice.language)
+			)
+		if amount == Decimal("0.00"):
+			# Le rendu chqr traduit ensuite l'avertissement : réserver la plus longue
+			# traduction, même si l'appelant change de langue au moment du rendu.
+			additional_information = "DO NOT USE FOR PAYMENT"
+			warning_length = max(len(text) for text in ALLOWED_NOTIFICATION_TEXTS.values())
+			if warning_length + len(information) > 140:
+				raise ValueError("Les informations S1 ne laissent pas de place à l'avertissement de non-paiement.")
+		additional_information = fit_message(additional_information, information)
 		return QRBill(
 			account=iban,
 			creditor=build_party(invoice.company, company_address, Creditor),
@@ -200,8 +229,9 @@ def build_qr_bill(
 			reference_type=reference_type,
 			reference=reference,
 			additional_information=additional_information or None,
+			billing_information=information,
 		)
-	except QRValidationError as e:
+	except (QRValidationError, ValueError) as e:
 		frappe.throw(_("QR-bill validation failed: {0}").format(str(e)))
 
 
