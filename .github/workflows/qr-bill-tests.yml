@@ -1,0 +1,27 @@
+name: QR-facture
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  informations-et-rendu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Installer la bibliothèque de génération contrôlée
+        run: python -m pip install chqr==1.2.5
+      - name: Vérifier les informations et le rendu QR sans site Frappe
+        run: python -m unittest discover -s tests -v
