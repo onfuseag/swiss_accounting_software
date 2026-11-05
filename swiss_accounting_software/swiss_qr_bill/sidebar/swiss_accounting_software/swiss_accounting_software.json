@@ -1,0 +1,46 @@
+{
+ "app": "swiss_accounting_software",
+ "doctype": "Sidebar",
+ "header_icon": "accounting",
+ "items": [
+  {
+   "icon": "alarm-clock-check",
+   "label": "Swiss Hours Calculation",
+   "link_to": "Swiss Hours Calculation",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "icon": "settings",
+   "label": "Swiss Calculation Settings",
+   "link_to": "Swiss Calculation Settings",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "collapsible": 1,
+   "keep_closed": 1,
+   "label": "Setup",
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "label": "Steuerziffer CH",
+   "link_to": "Steuerziffer CH",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "label": "Swiss QR Bill Settings",
+   "link_to": "Swiss QR Bill Settings",
+   "link_type": "DocType",
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-11-05 12:00:00.000000",
+ "module": "Swiss QR Bill",
+ "name": "Swiss Accounting Software",
+ "standard": 1,
+ "title": "Swiss Accounting Software"
+}

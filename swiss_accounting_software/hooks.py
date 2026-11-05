@@ -11,6 +11,19 @@ app_color = "grey"
 app_email = "contact@onfuse.ch"
 app_license = "MIT"
 
+# Desk navigation is shipped in swiss_qr_bill/sidebar and dock. The legacy
+# desktop_icon fixture is used only by sites that still use the icon grid.
+app_logo_url = "/assets/swiss_accounting_software/icons/desktop_icons/swiss_accounting_software.svg"
+
+add_to_apps_screen = [
+	{
+		"name": app_name,
+		"logo": app_logo_url,
+		"title": app_title,
+		"has_permission": "swiss_accounting_software.config.desktop.check_app_permission",
+	}
+]
+
 
 # Includes in <head>
 # ------------------

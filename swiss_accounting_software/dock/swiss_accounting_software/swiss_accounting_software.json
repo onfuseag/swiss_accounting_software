@@ -1,0 +1,18 @@
+{
+ "app": "swiss_accounting_software",
+ "doctype": "Dock",
+ "items": [
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "accounting",
+   "link_to": "Swiss Accounting Software",
+   "link_type": "Sidebar",
+   "title": "Swiss Accounting Software"
+  }
+ ],
+ "modified": "2026-11-05 12:00:00.000000",
+ "name": "swiss_accounting_software",
+ "standard": 1,
+ "user": ""
+}
