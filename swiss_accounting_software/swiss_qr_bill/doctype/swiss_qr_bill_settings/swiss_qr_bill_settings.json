@@ -14,7 +14,8 @@
   "threshold_payment_difference",
   "section_break_ozfr",
   "si_qr_on_submit",
-  "qr_bill_per_invoice"
+  "qr_bill_per_invoice",
+  "include_tax_id_in_payment_information"
  ],
  "fields": [
   {
@@ -71,11 +72,18 @@
    "fieldname": "qr_bill_per_invoice",
    "fieldtype": "Check",
    "label": "QR Bill per invoice"
+  },
+  {
+   "default": "0",
+   "description": "Adds the company's Swiss tax ID (UID), when available, to the QR bill's structured information. Invoice number and date are always included.",
+   "fieldname": "include_tax_id_in_payment_information",
+   "fieldtype": "Check",
+   "label": "Include Tax ID in Payment Information"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-06 19:48:00.000000",
+ "modified": "2026-11-05 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss QR Bill Settings",

@@ -23,6 +23,24 @@ Both a regular IBAN and a QR-IBAN are supported. Use **SCOR** or **NON** with a 
 - **SCOR** — regular IBAN with an ISO 11649 creditor reference (RF…)
 - **NON** — regular IBAN with no payment reference
 
+### Payment information
+
+Payment descriptions use English and include the invoice number and date. The QR
+also includes these values as structured Swico S1 data. Multiple installments keep
+their `1/2`, `2/2`, etc. counters; a single installment omits `1/1`.
+
+**Include Tax ID in Payment Information** in Swiss QR Bill Settings adds the
+company's Swiss tax ID (UID) from `Company.tax_id`, when available. It is off by
+default. Run `bench --site <site> migrate` and reload Desk after updating to add
+the new setting.
+
+Invoice descriptions are shortened to fit the shared 140-character limit;
+structured data and installment counters/due dates are preserved. QR headings
+continue to use the invoice language.
+
+Run the QR tests with `python -m unittest discover -s tests -v` after installing
+the project's dependencies.
+
 ### Wiki
 Guides are available on [docs.onfuse.ch/swiss-accounting-software](https://docs.onfuse.ch/swiss-accounting-software/)
 

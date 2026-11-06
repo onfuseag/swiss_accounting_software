@@ -10,7 +10,7 @@ dynamic = ["version"]
 dependencies = [
     # "frappe~=15.0.0" # Installed and managed by bench.
     "pypdf4",
-    "chqr",
+    "chqr==1.2.5",
 ]
 
 [build-system]

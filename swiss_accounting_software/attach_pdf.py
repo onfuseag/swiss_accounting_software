@@ -1,8 +1,10 @@
+from io import BytesIO
+import re
+
 import frappe
 from frappe import _
 from PyPDF4 import PdfFileMerger
 from frappe.utils.file_manager import save_file
-from io import BytesIO
 
 from swiss_accounting_software.qr_bill import generate_qr_slip_pdfs
 
@@ -40,19 +42,23 @@ def merge_pdf(pdf_list):
 	return output.getvalue()
 
 
-def remove_existing_qr_pdf(doctype, docname):
-	prefix = filename(docname).rsplit(".", 1)[0]
+def remove_existing_qr_pdf(doctype, docname, ignore_permissions=False):
+	base_name = filename(docname)
+	stem, extension = base_name.rsplit(".", 1)
+	# Frappe appends six hex digits when a filename already exists.
+	generated_name = re.compile(rf"{re.escape(stem)}[0-9a-f]{{6}}\.{re.escape(extension)}\Z")
 	files = frappe.get_all(
 		"File",
 		filters={
 			"attached_to_doctype": doctype,
 			"attached_to_name": docname,
+			"is_private": 1,
 		},
 		fields=["name", "file_name"],
 	)
 	for file in files:
-		if file.file_name and file.file_name.startswith(prefix):
-			frappe.delete_doc("File", file.name, ignore_permissions=True)
+		if file.file_name == base_name or generated_name.fullmatch(file.file_name or ""):
+			frappe.delete_doc("File", file.name, ignore_permissions=ignore_permissions)
 
 
 def sales_invoice_before_submit(doc, method=None):
@@ -77,17 +83,17 @@ def attach_qr_bill(docname, ignore_permissions=False):
 	doctype = "Sales Invoice"
 	invoice = frappe.get_doc(doctype, docname)
 	if not ignore_permissions:
-		invoice.check_permission("read")
+		invoice.check_permission("write")
 
 	qr_pdfs = generate_qr_slip_pdfs(invoice)
 	invoice_pdf = get_pdf_data(doctype, docname)
 	merged_pdf = merge_pdf([BytesIO(invoice_pdf), *[BytesIO(pdf) for pdf in qr_pdfs]])
 
-	remove_existing_qr_pdf(doctype, docname)
+	remove_existing_qr_pdf(doctype, docname, ignore_permissions=ignore_permissions)
 	save_and_attach(merged_pdf, doctype, docname)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def attach_pdf(docname=None, **kwargs):
 	docname = docname or kwargs.get("docname")
 	if not docname:
