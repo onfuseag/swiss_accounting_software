@@ -12,6 +12,16 @@ class SwissHoursCalculation(Document):
 		if self.status == "Open":
 			# Start the recalculation
 			calculate_hours_for_employee(self)
+		elif self.docstatus == 0 and self.status in (None, "", "Done") and (
+			self.has_value_changed("correction") or self.has_value_changed("previous_hours")
+		):
+			# Recompute the balance for manual drafts and draft hour adjustments.
+			count_balance = frappe.db.get_value(
+				"Swiss Calculation Settings",
+				{"enabled": 1, "employment_type": self.employment_type},
+				"count_balance",
+			)
+			set_new_balance(self, count_balance)
 		
 		# Compute the totals in the additional table
 		for row in self.additional:
@@ -67,7 +77,8 @@ def calculate_hours_for_employee(doc):
 		fields=["name"]
 	)
 
-	if not calculation_settings: 
+	if not calculation_settings:
+		set_new_balance(doc, False)
 		return
 
 	calculation_setting = frappe.get_doc("Swiss Calculation Settings", calculation_settings[0]["name"])
@@ -194,16 +205,25 @@ def calculate_hours_for_employee(doc):
 	
 	doc.worked_hours = worked_hours
 
-	# Dont need the new balance if the setting forbids it
-	if calculation_setting.count_balance == 0:
-		doc.new_balance = 0.0
-	else:
-		if doc.previous_hours is None:
-			doc.previous_hours = 0 
-		doc.new_balance = doc.previous_hours + worked_hours - required_work_hours_total
+	set_new_balance(doc, calculation_setting.count_balance)
 
 	# Finally set the calculation status to done
 	doc.status = "Done"
+
+
+def set_new_balance(doc, count_balance):
+	if not count_balance:
+		doc.new_balance = frappe.utils.flt(doc.correction)
+		return
+
+	if doc.previous_hours is None:
+		doc.previous_hours = 0
+
+	doc.new_balance = (
+		frappe.utils.flt(doc.previous_hours)
+		- (frappe.utils.flt(doc.required_hours) + frappe.utils.flt(doc.worked_hours))
+		+ frappe.utils.flt(doc.correction)
+	)
 
 # Get the daily allowance in a month for the timesheet
 def get_timesheet_allowance_daily(employee, from_date, to_date, calculation_setting) -> float:

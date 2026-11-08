@@ -1,0 +1,46 @@
+{
+ "app": "swiss_accounting_software",
+ "doctype": "Sidebar",
+ "modified": "2026-11-08 20:54:02.000000",
+ "module": "Swiss QR Bill",
+ "standard": 1,
+ "header_icon": "landmark",
+ "items": [
+  {
+   "icon": "landmark",
+   "label": "Bank Statement Import",
+   "link_to": "Bank Statement Import",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "icon": "landmark",
+   "label": "Bank Transaction",
+   "link_to": "Bank Transaction",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "collapsible": 1,
+   "keep_closed": 1,
+   "label": "Setup",
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "label": "Swiss QR Bill Settings",
+   "link_to": "Swiss QR Bill Settings",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "label": "Steuerziffer CH",
+   "link_to": "Steuerziffer CH",
+   "link_type": "DocType",
+   "type": "Link"
+  }
+ ],
+ "name": "Swiss Finance",
+ "title": "Swiss Finance"
+}

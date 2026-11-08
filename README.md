@@ -4,10 +4,13 @@ ERPNexts functionality with Swiss QR Integration and payment automation
 
 ### Desk navigation
 
-Swiss Accounting Software uses Frappe's app, sidebar, and dock structure. Its app
-entry opens the first permitted link in the **Swiss Accounting Software** sidebar,
-which includes Swiss Hours Calculation, Swiss Calculation Settings, and a Setup
-section for Steuerziffer CH and Swiss QR Bill Settings.
+Swiss Accounting Software has **Swiss Finance** and **Swiss Labour** sidebars in
+the Swiss QR Bill module, following the same multi-sidebar structure as Elevator.
+Swiss Finance links to Bank Statement Import, Bank Transaction, Swiss QR Bill
+Settings, and Steuerziffer CH. Swiss Labour links to Swiss Hours Calculation and
+Swiss Calculation Settings. Its **Frappe HR** section links to Attendance,
+Employee Checkin, Shift Type, Shift Assignment, Leave Application, Leave
+Allocation, and Timesheet.
 
 After updating the app, run `bench --site <site> migrate` to import the standard
 Sidebar and Dock records, then reload Desk. The existing app icon is reused.

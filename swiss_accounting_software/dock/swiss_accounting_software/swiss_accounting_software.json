@@ -5,13 +5,21 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "accounting",
-   "link_to": "Swiss Accounting Software",
+   "icon": "landmark",
+   "link_to": "Swiss Finance",
    "link_type": "Sidebar",
-   "title": "Swiss Accounting Software"
+   "title": "Swiss Finance"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "alarm-clock-check",
+   "link_to": "Swiss Labour",
+   "link_type": "Sidebar",
+   "title": "Swiss Labour"
   }
  ],
- "modified": "2026-11-05 12:00:00.000000",
+ "modified": "2026-11-08 20:54:02.000000",
  "name": "swiss_accounting_software",
  "standard": 1,
  "user": ""
