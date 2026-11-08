@@ -25,20 +25,22 @@ Both a regular IBAN and a QR-IBAN are supported. Use **SCOR** or **NON** with a 
 
 ### Payment information
 
-Payment descriptions use English and include the invoice number and date. The QR
-also includes these values as structured Swico S1 data. Multiple installments keep
-their `1/2`, `2/2`, etc. counters; a single installment omits `1/1`.
+The invoice number and date are included as structured Swico S1 billing information
+in the QR code and printed under the translated **Additional information** heading
+on the payment section. There is no default English invoice description. Multiple
+installments keep their `1/2`, `2/2`, etc. counters and due dates; a single
+installment omits `1/1`.
 
 **Include Tax ID in Payment Information** in Swiss QR Bill Settings adds the
 company's Swiss tax ID (UID) from `Company.tax_id`, when available. It is off by
 default. Run `bench --site <site> migrate` and reload Desk after updating to add
 the new setting.
 
-Invoice descriptions are shortened to fit the shared 140-character limit;
+Optional payment descriptions are shortened to fit the shared 140-character limit;
 structured data and installment counters/due dates are preserved. QR headings
 continue to use the invoice language.
 
-Run the QR tests with `python -m unittest discover -s tests -v` after installing
+Run the QR tests with `python3 -m unittest discover -s tests -v` after installing
 the project's dependencies.
 
 ### Wiki

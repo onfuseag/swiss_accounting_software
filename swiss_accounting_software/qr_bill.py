@@ -11,7 +11,6 @@ from swiss_accounting_software.billing_information import (
 	billing_information,
 	fit_message,
 	invoice_date,
-	invoice_message,
 )
 from swiss_accounting_software.qr_bill_layout import wrap_additional_information
 
@@ -119,11 +118,12 @@ def generate_qr_slip_pdf(invoice) -> bytes:
 
 
 def render_qr_bill_svg(bill: QRBill, language: str) -> str:
-	return wrap_additional_information(bill.generate_svg(language=language), bill.additional_information)
+	return wrap_additional_information(
+		bill.generate_svg(language=language), bill.additional_information, bill.billing_information
+	)
 
 
 def get_qr_bill_entries(invoice) -> list[dict]:
-	message = invoice_message(invoice.name, invoice.posting_date)
 	if should_create_qr_per_payment_term(invoice):
 		rows = [row for row in invoice.payment_schedule if _term_amount(row) > 0]
 		if rows:
@@ -131,7 +131,6 @@ def get_qr_bill_entries(invoice) -> list[dict]:
 			return [
 				{
 					"amount": _term_amount(row),
-					"additional_information": message,
 					"installment": payment_term_message(row, idx, total) if total > 1 else None,
 				}
 				for idx, row in enumerate(rows, start=1)
@@ -142,7 +141,6 @@ def get_qr_bill_entries(invoice) -> list[dict]:
 			"amount": Decimal(str(invoice.outstanding_amount or 0)).quantize(
 				Decimal("0.01"), rounding=ROUND_HALF_UP
 			),
-			"additional_information": message,
 		}
 	]
 
@@ -164,7 +162,7 @@ def _term_amount(row) -> Decimal:
 def payment_term_message(row, idx: int, total: int) -> str:
 	parts = [f"{idx}/{total}"]
 	if row.due_date:
-		parts.append(f"Due {invoice_date(row.due_date):%d.%m.%Y}")
+		parts.append(f"{invoice_date(row.due_date):%d.%m.%Y}")
 	return " - ".join(parts)
 
 
@@ -208,8 +206,6 @@ def build_qr_bill(
 		if settings.get("include_tax_id_in_payment_information"):
 			tax_id = frappe.db.get_value("Company", invoice.company, "tax_id")
 		information = billing_information(invoice.name, invoice.posting_date, tax_id)
-		if additional_information is None:
-			additional_information = invoice_message(invoice.name, invoice.posting_date)
 		if amount == Decimal("0.00"):
 			additional_information = "DO NOT USE FOR PAYMENT"
 			installment = None

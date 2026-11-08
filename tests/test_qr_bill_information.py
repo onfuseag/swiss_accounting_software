@@ -27,7 +27,6 @@ def load_source(name):
 information_module = load_source("billing_information")
 billing_information = information_module.billing_information
 fit_message = information_module.fit_message
-invoice_message = information_module.invoice_message
 
 
 class Document(SimpleNamespace):
@@ -37,10 +36,12 @@ class Document(SimpleNamespace):
 
 class BillingInformationTests(unittest.TestCase):
 	def test_invoice_number_and_date_are_structured(self):
-		self.assertEqual(
-			billing_information("DEMO-2026-00001", "2026-01-15"),
-			"//S1/10/DEMO-2026-00001/11/260115",
-		)
+		for day in [date(2026, 1, 15), datetime(2026, 1, 15), "2026-01-15"]:
+			with self.subTest(day=day):
+				self.assertEqual(
+					billing_information("DEMO-2026-00001", day),
+					"//S1/10/DEMO-2026-00001/11/260115",
+				)
 
 	def test_reserved_separators_are_escaped(self):
 		self.assertEqual(
@@ -78,21 +79,15 @@ class BillingInformationTests(unittest.TestCase):
 
 	def test_installment_details_are_preserved_before_description(self):
 		information = billing_information("DEMO", "2026-01-15")
-		installment = "1/2 - Due 15.02.2026"
-		message = fit_message("Long invoice description " * 20, information, installment)
+		installment = "1/2 - 15.02.2026"
+		message = fit_message("Long description " * 20, information, installment)
 		self.assertTrue(message.startswith(installment))
 		self.assertLessEqual(len(message) + len(information), 140)
 		self.assertTrue(message.endswith("..."))
 
 	def test_insufficient_space_for_installment_is_rejected(self):
 		with self.assertRaisesRegex(ValueError, "(?i)installment"):
-			fit_message("Invoice DEMO", "X" * 135, "1/2 - Due 15.02.2026")
-
-	def test_invoice_description_is_english(self):
-		for day in [date(2026, 1, 15), datetime(2026, 1, 15), "2026-01-15"]:
-			with self.subTest(day=day):
-				self.assertEqual(invoice_message("DEMO", day), "Invoice DEMO dated 15.01.2026")
-
+			fit_message("Text", "X" * 135, "1/2 - 15.02.2026")
 
 class QRBillIntegrationTests(unittest.TestCase):
 	def setUp(self):
@@ -153,7 +148,7 @@ class QRBillIntegrationTests(unittest.TestCase):
 		bill = self.module.build_qr_bill(self.invoice)
 		self.assertEqual(bill.build_data_string().split("\n")[27:32], [
 			"QRR", "210000000003139471430009017",
-			"Invoice DEMO-2026-00001 dated 15.01.2026", "EPD",
+			"", "EPD",
 			"//S1/10/DEMO-2026-00001/11/260115",
 		])
 		self.assertEqual(bill.amount, Decimal("100.00"))
@@ -195,7 +190,7 @@ class QRBillIntegrationTests(unittest.TestCase):
 		with self.assertRaisesRegex(ValueError, "(?i)tax|UID|Swiss"):
 			self.module.build_qr_bill(self.invoice)
 
-	def test_single_installment_omits_counter_and_uses_invoice_date(self):
+	def test_single_installment_omits_additional_information(self):
 		self.per_term = True
 		self.invoice.payment_schedule = [Document(
 			outstanding=100, payment_amount=100, payment_term=None,
@@ -203,7 +198,8 @@ class QRBillIntegrationTests(unittest.TestCase):
 		)]
 		entry = self.module.get_qr_bill_entries(self.invoice)[0]
 		bill = self.module.build_qr_bill(self.invoice, **entry)
-		self.assertEqual(bill.additional_information, "Invoice DEMO-2026-00001 dated 15.01.2026")
+		self.assertEqual(bill.additional_information, "")
+		self.assertIn("/11/260115", bill.billing_information)
 		self.assertEqual(bill.reference, self.invoice.esr_reference_code)
 
 	def test_multiple_installments_keep_amounts_counters_and_due_dates(self):
@@ -212,8 +208,7 @@ class QRBillIntegrationTests(unittest.TestCase):
 		self.assertEqual(len(entries), 2)
 		for index, entry in enumerate(entries, 1):
 			bill = self.module.build_qr_bill(self.invoice, **entry)
-			self.assertTrue(bill.additional_information.startswith(f"{index}/2 - Due 15.0{index + 1}.2026"))
-			self.assertIn("Invoice DEMO-2026-00001", bill.additional_information)
+			self.assertEqual(bill.additional_information, f"{index}/2 - 15.0{index + 1}.2026")
 			self.assertEqual(bill.amount, Decimal("50.00"))
 			self.assertEqual(bill.reference, self.invoice.esr_reference_code)
 			self.assertIn("/11/260115", bill.billing_information)
@@ -226,7 +221,7 @@ class QRBillIntegrationTests(unittest.TestCase):
 		messages = []
 		for index, entry in enumerate(self.module.get_qr_bill_entries(self.invoice), 1):
 			bill = self.module.build_qr_bill(self.invoice, **entry)
-			self.assertIn(f"{index}/2 - Due 15.0{index + 1}.2026", bill.additional_information)
+			self.assertIn(f"{index}/2 - 15.0{index + 1}.2026", bill.additional_information)
 			self.assertLessEqual(len(bill.additional_information) + len(bill.billing_information), 140)
 			self.assertIn(self.invoice.name, bill.billing_information)
 			messages.append(bill.additional_information)
@@ -270,9 +265,12 @@ class QRBillIntegrationTests(unittest.TestCase):
 				start = next(i for i, span in enumerate(spans) if span.text == "Additional information") + 1
 				end = next(i for i in range(start, len(spans)) if spans[i].get("font-weight") == "bold")
 				lines = [span.text for span in spans[start:end]]
-				self.assertGreater(len(lines), 1)
+				billing_line_count = (len(bill.billing_information) + 23) // 24
+				message_lines = lines[:-billing_line_count]
+				self.assertGreater(len(message_lines), 1)
 				self.assertTrue(all(len(line) <= 24 for line in lines))
-				self.assertEqual("".join("".join(lines).split()), "".join(bill.additional_information.split()))
+				self.assertEqual("".join("".join(message_lines).split()), "".join(bill.additional_information.split()))
+				self.assertEqual("".join(lines[-billing_line_count:]), bill.billing_information)
 				self.assertEqual(spans[end].text, "Payable by")
 				self.assertIn(self.invoice.customer_name, [span.text for span in spans[end:]])
 				last_baseline_mm = -4.76 + sum(float(span.get("dy")[:-2]) for span in spans) * 25.4 / 72

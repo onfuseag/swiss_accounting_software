@@ -14,10 +14,6 @@ def invoice_date(value) -> date:
 	return date.fromisoformat(str(value))
 
 
-def invoice_message(number: str, posting_date) -> str:
-	return f"Invoice {number} dated {invoice_date(posting_date):%d.%m.%Y}"
-
-
 def billing_information(number: str, posting_date, tax_id: str | None = None) -> str:
 	if not number or any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in number):
 		raise ValueError("Invoice number must be nonempty and contain no control characters.")
