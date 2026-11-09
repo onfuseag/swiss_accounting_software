@@ -12,20 +12,13 @@ class SwissHoursCalculation(Document):
 		if self.status == "Open":
 			# Start the recalculation
 			calculate_hours_for_employee(self)
-		elif self.docstatus == 0 and self.status in (None, "", "Done") and (
-			self.has_value_changed("correction") or self.has_value_changed("previous_hours")
-		):
-			# Recompute the balance for manual drafts and draft hour adjustments.
-			count_balance = frappe.db.get_value(
-				"Swiss Calculation Settings",
-				{"enabled": 1, "employment_type": self.employment_type},
-				"count_balance",
-			)
-			set_new_balance(self, count_balance)
+		if self.docstatus == 0:
+			# Keep the balance in sync for every draft save, including empty hour fields.
+			set_new_balance(self)
 		
 		# Compute the totals in the additional table
 		for row in self.additional:
-			row.total = row.quantity * row.amount
+			row.total = frappe.utils.flt(row.quantity) * frappe.utils.flt(row.amount)
 
 	pass
 
@@ -78,7 +71,7 @@ def calculate_hours_for_employee(doc):
 	)
 
 	if not calculation_settings:
-		set_new_balance(doc, False)
+		set_new_balance(doc)
 		return
 
 	calculation_setting = frappe.get_doc("Swiss Calculation Settings", calculation_settings[0]["name"])
@@ -105,12 +98,11 @@ def calculate_hours_for_employee(doc):
 	required_work_hours = 0.0
 	required_work_hours_total = 0.0 # for the period
 
-	if calculation_setting.working_hours != 0.0: # User did not define, best to use the company default
-		required_work_hours = calculation_setting.working_hours
-		required_work_hours_total = required_work_days * calculation_setting.working_hours
-	else: 
-		required_work_hours = hr_settings.standard_working_hours
-		required_work_hours_total = required_work_days * hr_settings.standard_working_hours
+	required_work_hours = (
+		frappe.utils.flt(calculation_setting.working_hours)
+		or frappe.utils.flt(hr_settings.standard_working_hours)
+	)
+	required_work_hours_total = required_work_days * required_work_hours
 	
 
 	# STEP 5: Get the attendance
@@ -144,7 +136,7 @@ def calculate_hours_for_employee(doc):
 			if tsa.activity_type == setting.activity_type: 
 				if setting.count_as_attendance == 1: 
 					tsa.count_as_attendance = 1
-					worked_hours = worked_hours + tsa.hours
+					worked_hours = worked_hours + frappe.utils.flt(tsa.hours)
 
 
 
@@ -180,7 +172,7 @@ def calculate_hours_for_employee(doc):
 	# FINAL STEP: Set the new data
 
 	# Add the monthly allowance, if there is any
-	allowance = allowance + calculation_setting.monthly_allowance
+	allowance = allowance + frappe.utils.flt(calculation_setting.monthly_allowance)
 
 	# Set the allowance in the table, if not already there
 	found = False
@@ -205,23 +197,20 @@ def calculate_hours_for_employee(doc):
 	
 	doc.worked_hours = worked_hours
 
-	set_new_balance(doc, calculation_setting.count_balance)
+	set_new_balance(doc)
 
 	# Finally set the calculation status to done
 	doc.status = "Done"
 
 
-def set_new_balance(doc, count_balance):
-	if not count_balance:
-		doc.new_balance = frappe.utils.flt(doc.correction)
-		return
-
+def set_new_balance(doc):
 	if doc.previous_hours is None:
 		doc.previous_hours = 0
 
 	doc.new_balance = (
 		frappe.utils.flt(doc.previous_hours)
-		- (frappe.utils.flt(doc.required_hours) + frappe.utils.flt(doc.worked_hours))
+		+ frappe.utils.flt(doc.worked_hours)
+		- frappe.utils.flt(doc.required_hours)
 		+ frappe.utils.flt(doc.correction)
 	)
 
@@ -266,17 +255,21 @@ def get_timesheet_allowance_daily(employee, from_date, to_date, calculation_sett
 # helper function for getting allowance, returns amount in float
 def get_allowance_for_day(calculation_setting, hours) -> float: 
 	allowance = 0.0
-	if calculation_setting.hourly_allowance != 0.0:
-		allowance = (calculation_setting.hourly_allowance * hours)
+	hours = frappe.utils.flt(hours)
+	hourly_allowance = frappe.utils.flt(calculation_setting.hourly_allowance)
+	daily_allowance = frappe.utils.flt(calculation_setting.daily_allowance)
+	daily_allowance_after_hours = frappe.utils.flt(calculation_setting.daily_allowance_after_hours)
+	max_allowance_per_day = frappe.utils.flt(calculation_setting.max_allowance_per_day)
+	if hourly_allowance != 0.0:
+		allowance = hourly_allowance * hours
 	
-	if calculation_setting.daily_allowance != 0.0 and calculation_setting.daily_allowance_after_hours != 0.0:
+	if daily_allowance != 0.0 and daily_allowance_after_hours != 0.0:
 		# Only give this if the user worked more
-		if hours > calculation_setting.daily_allowance_after_hours:
-			allowance = calculation_setting.daily_allowance
+		if hours > daily_allowance_after_hours:
+			allowance = daily_allowance
 
-
-	if allowance > calculation_setting.max_allowance_per_day:
-		allowance = calculation_setting.max_allowance_per_day 
+	if allowance > max_allowance_per_day:
+		allowance = max_allowance_per_day
 
 	return allowance
 
@@ -450,12 +443,13 @@ def get_hours_from_attendance(attendance_records, emp_working_hours, count_leave
 
 	for record in attendance_records:
 		# If its a leave, we still have to count the hours
+		working_hours = frappe.utils.flt(record.working_hours)
 		
 		if record.status == "Half Day" or record.status == "On Leave":
 
 			# If the user did still work on this day, we still want to count it
-			if record.working_hours > 0.0: 
-				total_time = total_time + record.working_hours
+			if working_hours > 0.0: 
+				total_time = total_time + working_hours
 			
 			# Only if the user wants us to count leaves
 			if count_leaves == 1:
@@ -467,7 +461,7 @@ def get_hours_from_attendance(attendance_records, emp_working_hours, count_leave
 							else:
 								total_time = total_time + emp_working_hours
 		else: 
-			total_time = total_time + record.working_hours
+			total_time = total_time + working_hours
 
 	return total_time
 

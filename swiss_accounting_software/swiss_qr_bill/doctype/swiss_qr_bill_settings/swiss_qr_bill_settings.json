@@ -29,7 +29,7 @@
   },
   {
    "default": "QRR",
-   "description": "<b>QRR</b>: 27-digit QR reference. Requires a QR-IBAN.<br><b>SCOR</b>: Creditor reference (ISO 11649, RF…). Requires a regular IBAN.<br><b>NON</b>: No payment reference. Requires a regular IBAN.",
+   "description": "<b>QRR</b>: 27-digit QR reference. Requires a QR-IBAN.<br><b>SCOR</b>: Creditor reference (ISO 11649, RF\u2026). Requires a regular IBAN.<br><b>NON</b>: No payment reference. Requires a regular IBAN.",
    "fieldname": "qr_code_type",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -69,6 +69,7 @@
   },
   {
    "default": "0",
+   "description": "Prints one QR Slip per Payment Term.",
    "fieldname": "qr_bill_per_invoice",
    "fieldtype": "Check",
    "label": "QR Bill per invoice"
@@ -83,7 +84,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-11-05 00:00:00.000000",
+ "modified": "2026-11-09 13:29:15.438451",
  "modified_by": "Administrator",
  "module": "Swiss QR Bill",
  "name": "Swiss QR Bill Settings",
