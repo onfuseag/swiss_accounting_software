@@ -137,6 +137,22 @@ class TestSwissHoursCalculation(FrappeTestCase):
 
 		self.assertEqual(doc.new_balance, 6.5)
 
+	def test_failed_draft_with_empty_hours_keeps_correction_in_balance(self):
+		doc = SimpleNamespace(
+			status="Failed",
+			docstatus=0,
+			previous_hours=5,
+			worked_hours=None,
+			required_hours=None,
+			correction=2,
+			new_balance=None,
+			additional=[],
+		)
+
+		hours_calculation.SwissHoursCalculation.validate(doc)
+
+		self.assertEqual(doc.new_balance, 7)
+
 	def test_new_draft_with_empty_hours_and_correction_recalculates(self):
 		doc = SimpleNamespace(
 			status=None,
