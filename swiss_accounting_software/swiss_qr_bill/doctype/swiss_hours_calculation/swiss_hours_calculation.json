@@ -23,6 +23,7 @@
   "previous_hours",
   "required_hours",
   "worked_hours",
+  "correction",
   "new_balance",
   "column_break_dwck",
   "section_break_kbtg",
@@ -90,6 +91,14 @@
    "label": "Worked Hours",
    "precision": "2",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "Positive hours increase New Balance; negative hours decrease it.",
+   "fieldname": "correction",
+   "fieldtype": "Float",
+   "label": "Correction",
+   "precision": "2"
   },
   {
    "fieldname": "column_break_dwck",

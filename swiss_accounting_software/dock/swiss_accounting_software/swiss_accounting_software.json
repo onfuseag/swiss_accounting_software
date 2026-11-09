@@ -1,0 +1,26 @@
+{
+ "app": "swiss_accounting_software",
+ "doctype": "Dock",
+ "items": [
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "landmark",
+   "link_to": "Swiss Finance",
+   "link_type": "Sidebar",
+   "title": "Swiss Finance"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "alarm-clock-check",
+   "link_to": "Swiss Labour",
+   "link_type": "Sidebar",
+   "title": "Swiss Labour"
+  }
+ ],
+ "modified": "2026-11-08 20:54:02.000000",
+ "name": "swiss_accounting_software",
+ "standard": 1,
+ "user": ""
+}
