@@ -1,7 +1,7 @@
 {
  "app": "swiss_accounting_software",
  "doctype": "Sidebar",
- "modified": "2026-11-08 20:54:02.000000",
+ "modified": "2026-11-09 09:06:28.000000",
  "module": "Swiss QR Bill",
  "standard": 1,
  "header_icon": "alarm-clock-check",
@@ -21,9 +21,10 @@
    "type": "Link"
   },
   {
-   "collapsible": 1,
-   "keep_closed": 1,
+   "collapsible": 0,
+   "keep_closed": 0,
    "label": "Frappe HR",
+   "show_arrow": 0,
    "type": "Section Break"
   },
   {
